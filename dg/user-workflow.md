@@ -134,6 +134,9 @@ Body:
 {same as interim repo}
 ```
 Add a comment:
+
+<div id="team-response-format">
+
 ```
 # Team's Response
 
@@ -152,6 +155,7 @@ But it's a minor bug.
 ## Duplicate status (if any):
 Duplicate of #1234
 ```
+</div>
 </panel>
 
 * Labels: `severity.*`, `type.*`, `response.*`, `duplicate`
@@ -160,7 +164,7 @@ Duplicate of #1234
 
 Add a comment to the original issue in `tester/repo-name`, in the following format:
 
-<panel type="seamless" header="Formats used">
+<panel type="seamless" header="Formats used" id="tester-response-format">
 
 ```
 # Team's Response
@@ -177,7 +181,7 @@ Add a comment to the original issue in `tester/repo-name`, in the following form
 **Reason for disagreement:**
 [replace this with your reason]
 
--------------------
+<catcher-end-of-segment>
 ```
 Example:
 
@@ -195,7 +199,7 @@ Team chose `Rejected`.
 **Reason for disagreement:**
 [replace this with your reason]
 
--------------------
+<catcher-end-of-segment>
 ## :question: Issue severity
 
 Team chose `Low`.
@@ -207,7 +211,7 @@ Originally `High`.
 **Reason for disagreement:**
 [replace this with your reason]
 
--------------------
+<catcher-end-of-segment>
 ## :question: Issue type
 
 Team chose `DocumentationBug`.
@@ -219,7 +223,7 @@ Originally `FunctionalityBug`.
 **Reason for disagreement:**
 [replace this with your reason]
 
--------------------
+<catcher-end-of-segment>
 ```
 </panel>
 
@@ -252,7 +256,7 @@ Originally `FunctionalityBug`.
 **Reason for disagreement:**
 It's a bug, not a typo.
 
--------------------
+<catcher-end-of-segment>
 ```
 </panel>
 

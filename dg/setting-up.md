@@ -13,39 +13,30 @@ This section guides you through the steps required to set up your computer for d
 ## Getting started
 
 **Prerequisites:**
-* [Node.js 12](https://nodejs.org/en/blog/release/v12.20.0/) -- (run `node -v` in your OS terminal to check the version of Node on your computer)
+* [Node.js 14](https://nodejs.org/en/blog/release/v14.21.2/) -- (run `node -v` in your OS terminal to check the version of Node on your computer)
 
 **Recommended:**
 * IDE: Visual Studio Code
 
 **Steps:**
 1. Fork this repository into your Github account.
-1. Clone the forked repository into your computer.
-1. Install dependencies with npm: Run `npm install`.
-1. Compile and start the application: Run `npm start`.
+2. Clone the forked repository into your computer.
+3. Install dependencies with npm: Run `npm install`
+    - *a list of warnings on outdated dependencies is to be expected and no action needs to be taken before proceeding.*
+4. Compile and start the application in browser: Run `npm run ng:serve:web`.
 
 -----------------------------------------------------------------------------------
 
 ## Dev commands
 
-Given below are different commands you can run to build the application in different operating systems.
+Given below are different commands you can use to run the app locally.
 
 |Command|Description|
 |--|--|
-|`npm start`| Start the app from Electron in development mode. |
 |`npm run ng:serve:web`| Start the app from the browser in development mode. |
-|`npm run build`| Build the app. Your built files are in the /dist folder. |
-|`npm run build:prod`| Build the app with Angular aot. Your built files are in the /dist folder. |
-|`npm run electron:local`| Builds your application and start electron
-|`npm run electron:linux`| Builds your application and creates an app consumable on linux system |
-|`npm run electron:windows`| On a Windows OS, builds your application and creates an app consumable in windows 32/64 bit systems |
-|`npm run electron:mac`|  On a MAC OS, builds your application and generates a `.app` file of your application that can be run on Mac |
-|`npm run deploy:web`| Will deploy the app onto the Github's `gh-pages` branch. <br/> Prerequisites:<br/> 1. Add Environment variable of `GH_TOKEN=<Github Personal Access Token>` with the permission of `repo`. <br/>2. `build:prod:web` command's `--base-href` argument in `package.json` must have the following format `https://<OrgName or Username>.github.io/CATcher/`. <br/> 3. If you are deploying outside of CATcher-org then it would be necessary to create a new OAuth application and change the `clientId` in `environment.prod.ts` <br/> 4. If you are deploying outside of CATcher-org, you would also need to deploy your own instance of proxy server using [gatekeeper](https://github.com/CATcher-org/gatekeeper) and change the appropriate variables in `environment.prod.ts`. |
- | `npm run lint` | Runs the linter (TSLint) |
- | `npm run test` | Runs the tests           |
- | `npm run test -- "--code-coverage"` | Runs the tests and generates code coverage report under `tests/coverage` folder |
+|`npm start`| Start the app from Electron in development mode. |
 
-We have a GitHub Actions' workflow that can perform some of the tasks above with a single-click.
+*Note that our development focus is mainly on Web-version and Electron is served as a backup plan when web version fails. You are encouraged to start working with Web version as a beginner first.*
 
 -----------------------------------------------------------------------------------
 
@@ -78,6 +69,74 @@ These tasks assume a basic understanding of `Angular` and `TypeScript`.
 If you wish to know more about them, you can visit our [tools page](tools.html).
 
 ### Backend
+
+<panel header="**Task 1: Add new label**" type="primary">
+  
+  **Task 1: Add new label `type.UiFlaw`**
+
+  Currently, there are only 3 types of bugs in CATcher: `type.DocumentationBug`, `type.FeatureFlaw` and `type.FunctionalityBug`. Let's add a fourth one, `type.UiFlaw` to understand the backend.
+
+  **Your Task**
+
+  Add a new label `type.UiFlaw` to the existing list of labels. You may choose a color and a definition to your liking.
+
+  <panel header="Hint 1" type="info">
+
+  First, you need to locate the files responsible for labels. Note that this is a backend task, so it is unlikely to be an Angular component.
+
+  </panel>
+  <panel header="Hint 2" type="info">
+
+  You may encounter 2 files that handle labels: `label.service.ts` and `label.model.ts`. `label.model.ts` contains the class responsible for Labels. It does not contain the list of labels used in CATcher. Therefore, look into `label.service.ts`.
+
+  </panel>
+  <panel header="Hint 3" type="info">
+
+  In `label.service.ts`, you will see how the various labels are defined. Can you emulate the other labels and add the new label?
+
+  </panel>
+
+  <panel header="Suggested solution" type="info">
+
+  In `label.service.ts`, you should declare a new definition of `type.UiFlaw`, then add it to the `LABEL_DEFINITIONS` and `REQUIRED_LABELS` under `REQUIRED_LABELS['type']['UiFlaw']`.
+
+  See the changes [here](https://github.com/chunweii/CATcher/commit/e34cc70be83ad14ed5bde0e6941894f0d76c03bd).
+
+  </panel>
+</panel>
+
+<panel header="**Task 2: Delete labels that are not in use**" type="primary">
+
+  **Task 2: Delete labels that are not in use**
+
+  Upon creation of a new repository, Github will automatically create default labels, which we may not use in CATcher. The user might also have added other labels on their own.
+  
+  **Your task**
+  
+  Add a feature to delete all labels that are not required by CATcher upon login.
+
+  <panel header="Hint 1" type="info">
+
+  Similar to the first task, one of the files responsible for this feature is `label.service.ts`. However, we need to interact with the Github API to delete labels. Can you find which service is responsible for handling Github API calls? 
+
+  </panel>
+  <panel header="Hint 2" type="info">
+
+  Refer to the <tooltip content="The version of octokit may differ. The version used by CATcher can be found in `package.json`."><a target="none" href="https://octokit.github.io/rest.js">octokit documentation</a></tooltip> for details on which Github API call to use.
+
+  </panel>
+  <panel header="Suggested solution" type="info">
+
+  1. Create a new method `deleteLabel(labelName)` in `github.service.ts`. Call the <tooltip content="See [the octokit docs](https://octokit.github.io/rest.js/v18#issues-delete-label)">octokit function</tooltip> to delete label.
+
+  2. In `label.service.ts`, edit the private `LabelService.ensureRepoHasRequiredLabels(actualLabels, requiredLabels)` method, by iterating through `actualLabels` and deleting every label in `actualLabels` that are not present in `requiredLabels`.
+
+  Refer [here](https://github.com/chunweii/CATcher/commit/eb38328b263aa08376fb6e5e47b83c4a07d00650) for the full changes.
+
+  </panel>
+
+</panel>
+
 
 ### Frontend
 
